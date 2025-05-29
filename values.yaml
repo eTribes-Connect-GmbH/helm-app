@@ -132,14 +132,14 @@ affinity: {}
 
 externalSecrets:
   enabled: true
-  secretName: "app-vault-secret"
-  extractKey: "app"
-  secretStoreName: "vault-backend"
+  secretName: ""
+  extractKey: ""
+  secretStoreName: ""
   provider:
-    serverAddress: "https://vault.etribes.samec.dev"
-    namespace: "vault"
-    secretPath: "app"
+    serverAddress: ""
+    namespace: ""
+    secretPath: ""
     appRole:
-      secretName: "pneuhage-vault-app-role"
-      roleIdKey: "role-id"
-      roleSecretKey: "role-secret"
+      secretName: ""
+      roleIdKey: ""
+      roleSecretKey: ""
