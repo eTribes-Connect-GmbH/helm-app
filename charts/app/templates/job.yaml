@@ -1,3 +1,4 @@
+{{- if .Values.onSyncCommands }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -12,9 +13,8 @@ spec:
     spec:
       restartPolicy: Never
       {{- $root := . }}
-      {{- with .Values.onSyncCommands }}
       containers:
-        {{- range . }}
+        {{- range .Values.onSyncCommands }}
         - name: {{ .name }}
           image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
@@ -27,10 +27,10 @@ spec:
           env:
             {{- toYaml .env | nindent 12 }}
           {{- end }}
-
         {{- end }}
-      {{- end }}
+{{- end }}
 ---
+{{- if .Values.singleRunCommands }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -45,9 +45,8 @@ spec:
     spec:
       restartPolicy: Never
       {{- $root := . }}
-      {{- with .Values.singleRunCommands }}
       containers:
-        {{- range . }}
+        {{- range .Values.singleRunCommands }}
         - name: {{ .name }}
           image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
@@ -61,5 +60,4 @@ spec:
             {{- toYaml .env | nindent 12 }}
           {{- end }}
         {{- end }}
-      {{- end }}
-
+{{- end }}
