@@ -3,6 +3,16 @@ entries:
   app:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-06-23T21:08:11.036035504Z"
+    description: A Helm chart for Kubernetes
+    digest: 5e8f77965df3d8700c3bdbe41e65d5f6d5346de3c749d1b39282105b59756b9f
+    name: app
+    type: application
+    urls:
+    - https://github.com/eTribes-Connect-GmbH/helm-app/releases/download/app-0.2.0/app-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-06-23T20:08:12.684643138Z"
     description: A Helm chart for Kubernetes
     digest: af258f86eb42744cc4f6da467b70f6546310ded2f7e329987936b1f03fbfd7e9
@@ -31,4 +41,4 @@ entries:
     urls:
     - https://github.com/eTribes-Connect-GmbH/helm-app/releases/download/app-0.1.0/app-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-23T21:03:25.798213097Z"
+generated: "2025-06-23T21:08:11.036051304Z"
