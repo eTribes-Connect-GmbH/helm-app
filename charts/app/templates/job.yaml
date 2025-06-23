@@ -13,9 +13,10 @@ spec:
       restartPolicy: Never
       {{- with .Values.onSyncCommands }}
       containers:
+        {{- $root := . }}
         {{- range . }}
         - name: {{ .name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
           command: {{ toJson .command }}
           {{- end }}
@@ -40,9 +41,10 @@ spec:
       restartPolicy: Never
       {{- with .Values.singleRunCommands }}
       containers:
+        {{- $root := . }}
         {{- range . }}
         - name: {{ .name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
           command: {{ toJson .command }}
           {{- end }}
