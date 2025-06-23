@@ -11,11 +11,12 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      {{- $root := . }}
       {{- with .Values.onSyncCommands }}
       containers:
         {{- range . }}
         - name: {{ .name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
           command: {{ toJson .command }}
           {{- end }}
@@ -32,17 +33,18 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
   annotations:
-     "helm.sh/hook": post-install
+    "helm.sh/hook": post-install
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
     spec:
       restartPolicy: Never
+      {{- $root := . }}
       {{- with .Values.singleRunCommands }}
       containers:
         {{- range . }}
         - name: {{ .name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           {{- if .command }}
           command: {{ toJson .command }}
           {{- end }}
