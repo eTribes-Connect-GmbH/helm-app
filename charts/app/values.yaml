@@ -81,3 +81,5 @@ externalSecrets:
       roleSecretKey: ""
 
 initContainers: []
+singleRunCommands: []
+onSyncCommands: []

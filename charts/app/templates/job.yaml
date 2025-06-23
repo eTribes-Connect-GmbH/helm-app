@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "app.fullname" . }}-on-sync
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      {{- with .Values.onSyncCommands }}
+      containers:
+        {{- range . }}
+        - name: {{ .name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- if .command }}
+          command: {{ toJson .command }}
+          {{- end }}
+          {{- if .args }}
+          args: {{ toJson .args }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "app.fullname" . }}-single-run
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  annotations:
+     "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      {{- with .Values.singleRunCommands }}
+      containers:
+        {{- range . }}
+        - name: {{ .name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- if .command }}
+          command: {{ toJson .command }}
+          {{- end }}
+          {{- if .args }}
+          args: {{ toJson .args }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+
