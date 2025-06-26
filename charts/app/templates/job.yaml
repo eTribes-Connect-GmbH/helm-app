@@ -29,35 +29,4 @@ spec:
           {{- end }}
         {{- end }}
 {{- end }}
----
-{{- if .Values.singleRunCommands }}
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ include "app.fullname" . }}-single-run
-  labels:
-    {{- include "app.labels" . | nindent 4 }}
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-delete-policy": hook-succeeded
-spec:
-  template:
-    spec:
-      restartPolicy: Never
-      {{- $root := . }}
-      containers:
-        {{- range .Values.singleRunCommands }}
-        - name: {{ .name }}
-          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
-          {{- if .command }}
-          command: {{ toJson .command }}
-          {{- end }}
-          {{- if .args }}
-          args: {{ toJson .args }}
-          {{- end }}
-          {{- if .env }}
-          env:
-            {{- toYaml .env | nindent 12 }}
-          {{- end }}
-        {{- end }}
-{{- end }}
+
