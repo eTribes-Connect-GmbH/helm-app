@@ -61,6 +61,8 @@ volumeMounts: []
 
 env: []
 
+envFrom: []
+
 nodeSelector: {}
 
 tolerations: []
