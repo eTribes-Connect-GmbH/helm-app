@@ -69,16 +69,8 @@ affinity: {}
 
 externalSecrets:
   enabled: false
-  secretName: ""
+  secretStoreName: "secret-store"
   extractKey: ""
-  provider:
-    serverAddress: ""
-    namespace: ""
-    secretPath: ""
-    appRole:
-      secretName: ""
-      roleIdKey: ""
-      roleSecretKey: ""
 
 initContainers: []
 onSyncCommands: []
