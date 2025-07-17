@@ -45,12 +45,14 @@ livenessProbe:
     port: http
   initialDelaySeconds: 30
   periodSeconds: 30
+  timeoutSeconds: 5
 readinessProbe:
   httpGet:
     path: /
     port: http
   initialDelaySeconds: 30
   periodSeconds: 30
+  timeoutSeconds: 5
 
 autoscaling:
   enabled: false
