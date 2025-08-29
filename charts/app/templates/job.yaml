@@ -20,7 +20,7 @@ spec:
       containers:
         {{- range .Values.onSyncCommands }}
         - name: {{ .name }}
-          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
+          image: "{{ $root.Values.image.spec }}"
           {{- if .command }}
           command: {{ toJson .command }}
           {{- end }}
