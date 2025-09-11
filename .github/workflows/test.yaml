@@ -19,13 +19,16 @@ jobs:
         run: helm plugin install https://github.com/helm-unittest/helm-unittest
       - name: Run helm unittest
         run: helm unittest charts/app
-      - name: Configure Git
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+      - name: Lint charts
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      # - uses: helm/kind-action@v1
-      # - run: |
-      #     curl -sSL https://git.io/chart-testing | bash
-      #     ct lint --charts charts/app
-      #     ct install --charts charts/app
-      # - run: kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=app --timeout=120s
+          ct lint --charts charts/app \
+            --helm-extra-args "--strict" \
+            --helm-extra-args '--values charts/app/values-ci.yaml'
+      # - name: Install KinD
+      #   uses: helm/kind-action@v1
+      # - name: Run ct install
+      #   run: ct install --charts charts/app
+      # - name: Validate
+      #   run: kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=app --timeout=120s

@@ -1,0 +1,15 @@
+cronJobs:
+  example:
+    schedule: "* * * * *"
+    restartPolicy: "Never"
+    imagePullPolicy: "IfNotPresent"
+    command:
+      - echo
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+

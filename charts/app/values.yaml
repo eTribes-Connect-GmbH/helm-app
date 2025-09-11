@@ -83,8 +83,8 @@ externalSecrets:
 initContainers: []
 onSyncCommands: []
 
-#Example:
-#cronJobs:
+# Example:
+# cronJobs:
 #  example:
 #    schedule: "* * * * *"
 #    restartPolicy: "Never"
