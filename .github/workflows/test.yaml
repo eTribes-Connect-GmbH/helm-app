@@ -26,6 +26,18 @@ jobs:
       - name: Setup chart-testing
         uses: helm/chart-testing-action@v2
 
+      - name: Install kubeconform
+        run: |
+          curl -sSL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+          | tar xz
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Install kube-linter
+        run: |
+          curl -sSL https://github.com/stackrox/kube-linter/releases/latest/download/kube-linter-linux.tar.gz \
+          | tar xz
+          sudo mv kube-linter /usr/local/bin/
+
       # Unit tests for template logic
       - name: Install helm unittest plugin
         run: helm plugin install https://github.com/helm-unittest/helm-unittest
@@ -35,6 +47,17 @@ jobs:
       # Static lint of the chart
       - name: Lint charts
         run: ct lint --charts charts/app --helm-extra-args "--strict" 
+
+      - name: Render Helm
+        run: |
+          helm template app charts/app -f charts/app/ci/ci-values.yaml > rendered.yaml
+
+      - name: kubeconform
+        run: kubeconform -summary -strict -ignore-missing-schemas < rendered.yaml
+
+      - name: kube-linter
+        run: kube-linter lint rendered.yaml
+        continue-on-error: true # For now we want to continue even if it fails, first we have to clean up helms that use this as dependency
         
       # Install chart into a throwaway ns and wait for readiness (proves it deploys)
       - name: Install charts (ct)
