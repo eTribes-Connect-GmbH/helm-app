@@ -1,10 +1,15 @@
+replicaCount: 1
+
+image:
+  pullPolicy: IfNotPresent
+  spec: nginx:alpine
+
 cronJobs:
-  example:
-    schedule: "* * * * *"
+  e2e-run:
+    schedule: "0 * * * *"
     restartPolicy: "Never"
     imagePullPolicy: "IfNotPresent"
-    command:
-      - echo
+    command: ["/bin/sh", "-c", "echo e2e-ok"]
     resources:
       limits:
         cpu: 100m
@@ -12,4 +17,3 @@ cronJobs:
       requests:
         cpu: 100m
         memory: 256Mi
-
