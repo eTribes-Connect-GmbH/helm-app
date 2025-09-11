@@ -1,0 +1,62 @@
+{{- range $jobname, $job := .Values.cronJobs }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "app.fullname" $ }}-{{ $jobname }}
+  labels:
+    {{- include "app.labels" $ | nindent 4 }}
+spec:
+  schedule: {{ required (printf "cronjobs[%d].schedule is required" $jobname) $job.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "app.selectorLabels" $ | nindent 12 }}
+        spec:
+          {{- with (default $.Values.imagePullSecrets $job.imagePullSecrets) }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+          - name: {{ $jobname }}
+            image: {{ default $.Values.image.spec $job.image | quote }}
+            imagePullPolicy: {{ default "IfNotPresent" $job.imagePullPolicy }}
+            {{- with $job.command }}
+            command:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $job.env }}
+            env:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $job.envFrom }}
+            envFrom:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $job.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $job.volumeMounts }}
+            volumeMounts:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+          {{- with $job.volumes }}
+          volumes:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $job.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $job.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $job.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: {{ $job.restartPolicy | default "Never" }}
+{{- end }}

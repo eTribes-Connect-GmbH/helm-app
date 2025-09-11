@@ -46,7 +46,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ required "set image.spec" .Values.image.spec }}"
+          image: "{{ .Values.image.spec }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
