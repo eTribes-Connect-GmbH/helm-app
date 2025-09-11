@@ -82,4 +82,29 @@ externalSecrets:
 
 initContainers: []
 onSyncCommands: []
+
+# Example:
+# cronJobs:
+#  example:
+#    schedule: "* * * * *"
+#    restartPolicy: "Never"
+#    imagePullPolicy: "IfNotPresent"
+#    command:
+#      - echo
+#    env:
+#    envFrom:
+#    resources:
+#      limits:
+#        cpu: 100m
+#        memory: 256Mi
+#      requests:
+#        cpu: 100m
+#        memory: 256Mi
+#    volumeMounts:
+#    volumes:
+#    nodeSelector:
+#    affinity:
+#    tolerations:
+cronJobs: {}
+
 topologySpreadConstraints: []

@@ -1,0 +1,115 @@
+suite: CronJob template
+templates:
+  - templates/cronjob.yaml
+
+tests:
+  - it: renders nothing when cronJobs is an empty map
+    set:
+      cronJobs: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when cronJobs is null
+    set:
+      cronJobs: null
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders one CronJob per array item
+    set:
+      image:
+        spec: alpine:3.19
+      cronJobs:
+        - schedule: "*/5 * * * *"
+        - schedule: "0 0 * * *"
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: CronJob
+
+  - it: per-job image and pullPolicy override globals
+    set:
+      image: { spec: alpine:3.19 }
+      cronJobs:
+        - schedule: "*/5 * * * *"
+          image: busybox:1.36
+          imagePullPolicy: Always
+    asserts:
+      - hasDocuments: 
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: busybox:1.36
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].imagePullPolicy
+          value: Always
+
+  - it: falls back to global image and default pullPolicy
+    set:
+      image: 
+        spec: alpine:3.19
+      cronJobs:
+        - schedule: "0 0 * * *"
+    asserts:
+      - hasDocuments: 
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: alpine:3.19
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].imagePullPolicy
+          value: IfNotPresent
+
+  - it: per-job imagePullSecrets override global
+    set:
+      imagePullSecrets:
+        - name: global-pull
+      cronJobs:
+        - schedule: "*/5 * * * *"
+          imagePullSecrets:
+            - name: per-job-pull
+    asserts:
+      - hasDocuments: 
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name
+          value: per-job-pull
+
+  - it: uses global imagePullSecrets when per-job absent
+    set:
+      imagePullSecrets:
+        - name: global-pull
+      cronJobs:
+        - schedule: "0 12 * * *"
+    asserts:
+      - hasDocuments:  
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name
+          value: global-pull
+
+  - it: restartPolicy defaults to Never
+    set:
+      cronJobs:
+        - schedule: "*/10 * * * *"
+    asserts:
+      - hasDocuments: 
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.restartPolicy
+          value: Never
+
+  - it: restartPolicy can be overridden to OnFailure
+    set:
+      cronJobs:
+        - schedule: "*/15 * * * *"
+          restartPolicy: OnFailure
+    asserts:
+      - hasDocuments: 
+          count: 1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.restartPolicy
+          value: OnFailure

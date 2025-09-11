@@ -1,0 +1,56 @@
+name: Tests and linting
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  run-tests:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Setup KinD
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: ct
+
+      - name: Setup chart-testing
+        uses: helm/chart-testing-action@v2
+
+      # Unit tests for template logic
+      - name: Install helm unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest
+      - name: Run helm unittest
+        run: helm unittest charts/app 
+
+      # Static lint of the chart
+      - name: Lint charts
+        run: ct lint --charts charts/app --helm-extra-args "--strict" 
+        
+      # Install chart into a throwaway ns and wait for readiness (proves it deploys)
+      - name: Install charts (ct)
+        run: ct install --charts charts/app
+
+      # Integration smoke: install into fixed ns with CI values
+      - name: Install for CronJob smoke (fixed ns)
+        run: |
+          helm upgrade --install app charts/app -n e2e --create-namespace \
+            -f charts/app/ci/ci-values.yaml --wait --timeout 5m0s
+      - name: Trigger CronJob once and verify
+        run: |
+          NS=e2e
+          CJ=$(kubectl -n "$NS" get cronjob -l app.kubernetes.io/instance=app \
+               -o jsonpath='{.items[0].metadata.name}')
+          echo "CronJob: $CJ"
+          kubectl -n "$NS" create job --from=cronjob/$CJ smoke
+          kubectl -n "$NS" wait job/smoke --for=condition=complete --timeout=180s
+          kubectl -n "$NS" logs job/smoke
