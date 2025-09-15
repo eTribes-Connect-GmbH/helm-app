@@ -35,6 +35,10 @@ spec:
           envFrom:
             {{- toYaml .envFrom | nindent 12 }}
           {{- end }}
+          {{- if .resources }}
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          {{- end }}
         {{- end }}
 {{- end }}
 
