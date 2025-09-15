@@ -40,6 +40,7 @@ docker run --rm \
 ## Chart testing
 
 ```
+kind get kubeconfig --name ct --internal > kubeconfig
 docker run --rm --network kind \
   -v "$PWD":/work -w /work \
   -v "$PWD/kubeconfig":/kubeconfig \
