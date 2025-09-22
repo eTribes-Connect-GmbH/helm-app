@@ -6,7 +6,7 @@ on:
     types: 
       - closed
     branches: 
-      - maste]
+      - master
 
 jobs:
   release-on-merge:
