@@ -39,20 +39,8 @@ ingress:
 
 resources: {}
 
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-  initialDelaySeconds: 30
-  periodSeconds: 30
-  timeoutSeconds: 5
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-  initialDelaySeconds: 30
-  periodSeconds: 30
-  timeoutSeconds: 5
+livenessProbe: {}
+readinessProbe: {}
 
 autoscaling:
   enabled: false
