@@ -2,7 +2,9 @@ name: Tests and linting
 
 on:
   pull_request:
-  push:
+    types:
+      - opened
+      - synchronize
 
 jobs:
   run-tests:
