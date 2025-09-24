@@ -27,6 +27,10 @@ spec:
             command:
               {{- toYaml . | nindent 14 }}
             {{- end }}
+            {{- with $job.args }}
+            args:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
             {{- with $job.env }}
             env:
               {{- toYaml . | nindent 14 }}
