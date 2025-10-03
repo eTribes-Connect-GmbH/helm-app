@@ -5,6 +5,14 @@ image:
   pullPolicy: IfNotPresent
   spec: nginx:alpine
 
+resources:
+  limits:
+    cpu: 500m
+    memory: 2048Mi
+  requests:
+    cpu: 200m
+    memory: 1024Mi
+
 cronJobs:
   e2e-run:
     schedule: "0 * * * *"

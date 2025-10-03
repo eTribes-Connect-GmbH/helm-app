@@ -59,13 +59,10 @@ jobs:
 
       - name: kube-linter
         run: kube-linter lint rendered.yaml
-        continue-on-error: true # For now we want to continue even if it fails, first we have to clean up helms that use this as dependency
         
-      # Install chart into a throwaway ns and wait for readiness (proves it deploys)
       - name: Install charts (ct)
         run: ct install --charts charts/app
 
-      # Integration smoke: install into fixed ns with CI values
       - name: Install for CronJob smoke (fixed ns)
         run: |
           helm upgrade --install app charts/app -n e2e --create-namespace \
