@@ -39,5 +39,14 @@ spec:
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
+          {{- if .Values.useVersionSidecar -}}
+          - path: /version
+            pathType: Exact
+            backend:
+              service:
+                name: {{ include "app.fullname" $ }}
+                port:
+                  name: version
+          {{- end }}
     {{- end }}
 {{- end }}

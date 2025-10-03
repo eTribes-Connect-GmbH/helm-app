@@ -84,6 +84,20 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- if .Values.useVersionSidecar -}}
+        - name: version-echo
+          image: hashicorp/http-echo:1.0.0
+          env:
+            - name: VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['app.kubernetes.io/version']
+          command: ["/bin/sh","-c"]
+          args:
+            - /http-echo -listen=:8081 -text="$VERSION"
+          ports:
+            - containerPort: 8081
+        {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
