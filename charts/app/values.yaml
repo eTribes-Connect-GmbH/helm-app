@@ -75,6 +75,8 @@ onSyncCommands: []
 # cronJobs:
 #  example:
 #    schedule: "* * * * *"
+#    backoffLimit: 3
+#    ttlSecondsAfterFinished
 #    restartPolicy: "Never"
 #    imagePullPolicy: "IfNotPresent"
 #    command:

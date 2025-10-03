@@ -10,6 +10,8 @@ spec:
   schedule: {{ required (printf "cronjobs[%s].schedule is required" $jobname) $job.schedule | quote }}
   jobTemplate:
     spec:
+      backoffLimit: {{ $job.backoffLimit | default 3 }}
+      ttlSecondsAfterFinished: {{ $job.ttlSecondsAfterFinished | default 600 }}
       template:
         metadata:
           labels:
