@@ -39,7 +39,7 @@ spec:
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
-          {{- if .Values.useVersionSidecar }}
+          {{- if $.Values.useVersionSidecar }}
           - path: /version
             pathType: Exact
             backend:
