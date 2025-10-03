@@ -98,3 +98,4 @@ onSyncCommands: []
 cronJobs: {}
 
 topologySpreadConstraints: []
+useVersionSidecar: true
