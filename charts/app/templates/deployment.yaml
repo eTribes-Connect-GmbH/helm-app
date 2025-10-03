@@ -97,6 +97,13 @@ spec:
             - /http-echo -listen=:8081 -text="$VERSION"
           ports:
             - containerPort: 8081
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
         {{- end }}
       {{- with .Values.volumes }}
       volumes:
