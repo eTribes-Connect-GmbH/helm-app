@@ -92,9 +92,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.annotations['app.kubernetes.io/version']
-          command: ["/bin/sh","-c"]
+          command: ["/http-echo"]
           args:
-            - /http-echo -listen=:8081 -text="$VERSION"
+            - "-listen=:8081"
+            - "-text=$(VERSION)"
           ports:
             - containerPort: 8081
           resources:
