@@ -44,7 +44,7 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: {{ include "app.fullname" $ }}
+                name: version
                 port:
                   name: version
           {{- end }}
