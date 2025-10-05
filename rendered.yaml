@@ -1,0 +1,178 @@
+---
+# Source: app/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app
+  labels:
+    helm.sh/chart: app-0.7.1
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: app/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  labels:
+    helm.sh/chart: app-0.7.1
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+    - name: version
+      port: 8081
+      targetPort: 8081
+  selector:
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+---
+# Source: app/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    helm.sh/chart: app-0.7.1
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app
+      app.kubernetes.io/instance: app
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: app-0.7.1
+        app.kubernetes.io/name: app
+        app.kubernetes.io/instance: app
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: app
+      containers:
+        - name: app
+          image: "nginx:alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2048Mi
+            requests:
+              cpu: 200m
+              memory: 1024Mi
+        - name: version-echo
+          image: hashicorp/http-echo:1.0.0
+          env:
+            - name: VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['app.kubernetes.io/version']
+          command: ["/http-echo"]
+          args:
+            - "-listen=:8081"
+            - "-text=$(VERSION)"
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
+---
+# Source: app/templates/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: app-e2e-run
+  labels:
+    helm.sh/chart: app-0.7.1
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: app
+            app.kubernetes.io/instance: app
+        spec:
+          containers:
+          - name: e2e-run
+            image: "nginx:alpine"
+            imagePullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+              - echo e2e-ok
+            resources:
+              limits:
+                cpu: 100m
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 256Mi
+          restartPolicy: Never
+---
+# Source: app/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app
+  labels:
+    helm.sh/chart: app-0.7.1
+    app.kubernetes.io/name: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "test.com"
+      secretName: test-tls-secret
+  rules:
+    - host: "test.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80
+          - path: /version
+            pathType: Exact
+            backend:
+              service:
+                name: app
+                port:
+                  name: version

@@ -11,7 +11,7 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    {{- if .Values.useVersionSidecar }}
+    {{- if and (.Values.useVersionSidecar) (.Values.ingress.enabled) }}
     - name: version
       port: 8081
       targetPort: 8081
