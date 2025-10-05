@@ -28,6 +28,15 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
+          {{- if $.Values.useVersionSidecar }}
+          - path: /version
+            pathType: Exact
+            backend:
+              service:
+                name: {{ include "app.fullname" $ }}
+                port:
+                  name: version
+          {{- end }}
           {{- range .paths }}
           - path: {{ .path }}
             {{- with .pathType }}
@@ -38,15 +47,6 @@ spec:
                 name: {{ include "app.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
-          {{- end }}
-          {{- if $.Values.useVersionSidecar }}
-          - path: /version
-            pathType: Exact
-            backend:
-              service:
-                name: version
-                port:
-                  name: version
-          {{- end }}
+          {{- end }} 
     {{- end }}
 {{- end }}
