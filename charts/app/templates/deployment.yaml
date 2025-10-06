@@ -91,7 +91,7 @@ spec:
             - name: VERSION
               valueFrom:
                 fieldRef:
-                  fieldPath: metadata.annotations['app.kubernetes.io/version']
+                  fieldPath: metadata.annotations['app-version']
           command: ["/http-echo"]
           args:
             - "-listen=:8081"
