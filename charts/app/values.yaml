@@ -5,6 +5,7 @@ image:
   pullPolicy: IfNotPresent
   spec: ""
 
+hostAliases: []
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
