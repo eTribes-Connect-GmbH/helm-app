@@ -8,6 +8,7 @@ metadata:
     {{- include "app.labels" $ | nindent 4 }}
 spec:
   schedule: {{ required (printf "cronjobs[%s].schedule is required" $jobname) $job.schedule | quote }}
+  concurrencyPolicy: {{ $job.concurrencyPolicy | default "Allow" }}
   jobTemplate:
     spec:
       backoffLimit: {{ $job.backoffLimit | default 3 }}
