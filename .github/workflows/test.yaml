@@ -42,13 +42,13 @@ jobs:
 
       # Unit tests for template logic
       - name: Install helm unittest plugin
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest
+        run: helm plugin install --verify=false https://github.com/helm-unittest/helm-unittest
       - name: Run helm unittest
-        run: helm unittest charts/app 
+        run: helm unittest charts/app
 
       # Static lint of the chart
       - name: Lint charts
-        run: ct lint --charts charts/app --helm-extra-args "--strict" 
+        run: ct lint --charts charts/app --helm-extra-args "--strict"
 
       - name: Render Helm
         run: |
@@ -59,7 +59,7 @@ jobs:
 
       - name: kube-linter
         run: kube-linter lint rendered.yaml
-        
+
       - name: Install charts (ct)
         run: ct install --charts charts/app
 
