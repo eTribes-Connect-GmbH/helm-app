@@ -3,6 +3,18 @@ entries:
   app:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-01-28T09:17:09.854877395Z"
+    description: A Helm chart for Kubernetes
+    digest: 3df961f816c33fab4b26ab5e6da558cab0ff8db8ae06a6f9aace7acafc824a6c
+    maintainers:
+    - name: msamec
+    name: app
+    type: application
+    urls:
+    - https://github.com/eTribes-Connect-GmbH/helm-app/releases/download/app-0.7.8/app-0.7.8.tgz
+    version: 0.7.8
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2026-01-15T10:14:48.969599238Z"
     description: A Helm chart for Kubernetes
     digest: 3f3ca8207c70e57bf857783f322bf87b0c765a05121f04c23300c696d4722397
@@ -319,4 +331,4 @@ entries:
     urls:
     - https://github.com/eTribes-Connect-GmbH/helm-app/releases/download/app-0.1.0/app-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-15T10:14:48.969867117Z"
+generated: "2026-01-28T09:17:09.855189979Z"
