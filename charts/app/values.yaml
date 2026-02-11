@@ -76,6 +76,8 @@ onSyncCommands: []
 # cronJobs:
 #  example:
 #    schedule: "* * * * *"
+#    successfulJobsHistoryLimit: 0     # keep 0 successful jobs (default: 0). Keeping them around costs money in Fargate!
+#    failedJobsHistoryLimit: 1         # keep 1 failed job for debugging (default: 1)
 #    backoffLimit: 3
 #    restartPolicy: "Never"
 #    imagePullPolicy: "IfNotPresent"

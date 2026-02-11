@@ -9,6 +9,8 @@ metadata:
 spec:
   schedule: {{ required (printf "cronjobs[%s].schedule is required" $jobname) $job.schedule | quote }}
   concurrencyPolicy: {{ $job.concurrencyPolicy | default "Allow" }}
+  successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit | default 0 | int }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit | default 1 | int }}
   jobTemplate:
     spec:
       backoffLimit: {{ $job.backoffLimit | default 3 }}
