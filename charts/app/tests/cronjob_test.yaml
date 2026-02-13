@@ -108,8 +108,31 @@ tests:
         - schedule: "*/15 * * * *"
           restartPolicy: OnFailure
     asserts:
-      - hasDocuments: 
+      - hasDocuments:
           count: 1
       - equal:
           path: spec.jobTemplate.spec.template.spec.restartPolicy
           value: OnFailure
+
+  - it: suspend defaults to false
+    set:
+      cronJobs:
+        - schedule: "*/5 * * * *"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.suspend
+          value: false
+
+  - it: suspend can be set to true
+    set:
+      cronJobs:
+        - schedule: "*/5 * * * *"
+          suspend: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.suspend
+          value: true
