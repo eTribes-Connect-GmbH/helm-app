@@ -76,6 +76,7 @@ onSyncCommands: []
 # cronJobs:
 #  example:
 #    schedule: "* * * * *"
+#    suspend: false                    # set to true to suspend the cronjob (default: false)
 #    successfulJobsHistoryLimit: 0     # keep 0 successful jobs (default: 0). Keeping them around costs money in Fargate!
 #    failedJobsHistoryLimit: 1         # keep 1 failed job for debugging (default: 1)
 #    backoffLimit: 3
