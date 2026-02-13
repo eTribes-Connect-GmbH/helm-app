@@ -15,6 +15,9 @@ spec:
   jobTemplate:
     spec:
       backoffLimit: {{ $job.backoffLimit | default 3 }}
+      {{- if $job.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ $job.ttlSecondsAfterFinished | int }}
+      {{- end }}
       template:
         metadata:
           labels:
