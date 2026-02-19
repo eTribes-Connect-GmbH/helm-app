@@ -9,7 +9,7 @@ metadata:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
-  ttlSecondsAfterFinished: 100
+  ttlSecondsAfterFinished: 120
   template:
     spec:
       {{- with .Values.imagePullSecrets }}
