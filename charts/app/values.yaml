@@ -64,6 +64,9 @@ tolerations: []
 
 affinity: {}
 
+# Grace period (seconds) for pod shutdown. Unset uses the Kubernetes default (30).
+# terminationGracePeriodSeconds: 30
+
 externalSecrets:
   enabled: false
   secretStoreName: "secret-store"
