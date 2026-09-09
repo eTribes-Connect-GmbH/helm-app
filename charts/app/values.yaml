@@ -1,5 +1,7 @@
 replicaCount: 1
 
+strategy: {}
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent

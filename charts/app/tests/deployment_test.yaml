@@ -1,0 +1,15 @@
+suite: Deployment template
+templates:
+  - templates/deployment.yaml
+
+tests:
+  - it: renders configured deployment strategy
+    set:
+      image:
+        spec: nginx:1.27
+      strategy:
+        type: Recreate
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
