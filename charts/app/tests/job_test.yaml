@@ -1,0 +1,53 @@
+suite: Job template
+templates:
+  - templates/job.yaml
+
+tests:
+  - it: renders nothing without onSyncCommands
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: uses the chart service account by default
+    release:
+      name: shop
+    set:
+      image:
+        spec: alpine:3.19
+      onSyncCommands:
+        - name: migrate
+          command: ["true"]
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: shop-app
+
+  - it: uses serviceAccount.name when set
+    set:
+      image:
+        spec: alpine:3.19
+      serviceAccount:
+        name: custom-sa
+      onSyncCommands:
+        - name: migrate
+          command: ["true"]
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: custom-sa
+
+  - it: falls back to the default service account when none is created
+    set:
+      image:
+        spec: alpine:3.19
+      serviceAccount:
+        create: false
+      onSyncCommands:
+        - name: migrate
+          command: ["true"]
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: default
